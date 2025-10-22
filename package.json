@@ -1,11 +1,10 @@
 {
   "name": "saberviver-front",
   "version": "1.0.0",
-  "description": "Front-end Saber Viver (HTML, CSS, JS puro)",
   "scripts": {
     "start": "npx serve -s ."
   },
   "dependencies": {
-    "serve": "^14.2.0"
+    "serve": "^14.2.1"
   }
 }
