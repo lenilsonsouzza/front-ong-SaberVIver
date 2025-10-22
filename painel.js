@@ -56,7 +56,7 @@ const IS_PRODUCTION = detectEnvironment();
 const CONFIG = {
     API_BASE_URL: IS_PRODUCTION && typeof PRODUCTION_CONFIG !== 'undefined' 
         ? PRODUCTION_CONFIG.API_BASE_URL || "https://saberviver-api.up.railway.app"
-        : "https://saberviver-api.up.railway.app",
+        : "http://localhost:8080" ,
     
     // SISTEMA USA APENAS API REAL - SEM MOCK
     DEVELOPMENT_MODE: false,
