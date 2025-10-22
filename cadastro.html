@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="cadastro.css">
+  <title>Cadastro de Aluno</title>
+</head>
+<body>
+
+  <!-- Barra de notificação -->
+  <div id="notificacao" class="notificacao">Cadastro concluído com sucesso!</div>
+
+  <form id="cadastroForm" action="CadastroServlet" method="POST">
+    <h1>Cadastro de Aluno</h1>
+
+    <!-- dados do responsavel -->
+    <section class="form-section">
+      <h3>Dados do Responsável</h3>
+
+      <div class="form-group">
+        <label for="nomeResponsavel">Nome do Responsável</label>
+        <input type="text" id="nomeResponsavel" name="nomeResponsavel" required>
+        <span class="required-text">Campo obrigatório</span>
+      </div>
+
+
+      <div class="form-group">
+        <label for="cpfResponsavel">CPF do Responsável</label>
+        <input type="text" id="cpfResponsavel" name="cpfResponsavel" maxlength="14" placeholder="000.000.000-00" required>
+        <span class="required-text">Campo obrigatório</span>
+      </div>
+
+      <div class="form-group">
+        <label for="telefonePrincipal">Telefone principal</label>
+        <input type="text" id="telefonePrincipal" name="telefonePrincipal" maxlength="15" placeholder="(00) 00000-0000" required>
+        <span class="required-text">Campo obrigatório</span>
+      </div>
+
+      <div class="form-group">
+        <label for="telefoneOpcional">Telefone alternativo (opcional)</label>
+        <input type="text" id="telefoneOpcional" name="telefoneOpcional" maxlength="15" placeholder="(00) 00000-0000">
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- dados do aluno -->
+    <section class="form-section">
+      <h3>Dados do Aluno</h3>
+
+      <div class="form-group">
+        <label for="nome">Nome do Aluno</label>
+        <input type="text" id="nome" name="nome" required>
+        <span class="required-text">Campo obrigatório</span>
+      </div>
+
+      <div class="form-group">
+        <label for="sobreNome">sobreNome do Aluno</label>
+        <input type="text" id="sobreNome" name="sobreNome" required>
+        <span class="required-text">Campo obrigatório</span>
+      </div>
+
+      <div class="form-group">
+        <label for="apelido">Apelido <span class="opcional">(opcional)</span></label>
+        <input type="text" id="apelido" name="apelido" placeholder="Como o aluno prefere ser chamado">
+      </div>
+
+      <div class="form-group">
+        <label for="cpf">CPF do Aluno <span class="opcional">(opcional)</span></label>
+        <input type="text" id="cpf" name="cpf" maxlength="14" placeholder="000.000.000-00">
+      </div>
+
+      <div class="form-group">
+        <label>Data de Nascimento</label>
+        <div class="dob-container">
+          <select id="dia" name="dia" required></select>
+          <select id="mes" name="mes" required>
+            <option value="">Mês</option>
+            <option value="01">Janeiro</option>
+            <option value="02">Fevereiro</option>
+            <option value="03">Março</option>
+            <option value="04">Abril</option>
+            <option value="05">Maio</option>
+            <option value="06">Junho</option>
+            <option value="07">Julho</option>
+            <option value="08">Agosto</option>
+            <option value="09">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
+          </select>
+          <select id="ano" name="ano" required></select>
+        </div>
+        <span class="required-text">Campo obrigatório</span>
+      </div>
+
+      <!-- atividades -->
+      <div class="form-group">
+        <h3>Atividades Disponíveis</h3>
+        <div id="listaAtividades">
+          <p style="font-size: 14px; color: #555;">Carregando atividades...</p>
+        </div>
+        <span class="required-text">Selecione pelo menos uma atividade</span>
+        <input type="hidden" name="atividadesSelecionadas" id="atividadesSelecionadas">
+      </div>
+    </section>
+
+    <!-- termos -->
+    <section class="form-section">
+      <h3>Termos de Consciência</h3>
+
+      <button type="button" id="toggleTermos" style="margin-bottom:10px;">Mostrar Termos</button>
+      <div class="termos-text" id="termosTexto" style="display:none; max-height:400px; overflow-y:auto; border:1px solid #ccc; padding:10px; background:#f9f9f9;">
+        <p>
+          Termo de Consentimento para Uso de Imagem e Voz de Alunos<br><br>
+
+Eu, na qualidade de responsável legal pelo(a) aluno(a) [nome do aluno], declaro que fui plenamente informado(a) e autorizo a instituição [nome da instituição] a utilizar a imagem, voz, nome e quaisquer registros audiovisuais do(a) aluno(a) para fins institucionais, pedagógicos, educativos e de divulgação, conforme descrito a seguir:<br><br>
+
+<strong>Finalidade do uso:</strong><br>
+- Divulgação das atividades, projetos, eventos e conquistas do(a) aluno(a) e da instituição;<br>
+- Produção de conteúdos informativos e promocionais em redes sociais, site institucional, boletins, folders, cartazes e demais mídias;<br>
+- Registro e documentação de aulas, apresentações, atividades extracurriculares e projetos educacionais.<br><br>
+
+<strong>Direitos e garantias:</strong><br>
+- O uso das imagens e gravações será estritamente voltado para a promoção e valorização das atividades educativas e institucionais;<br>
+- As informações e imagens serão utilizadas com responsabilidade, ética e respeito à dignidade do(a) aluno(a);<br>
+- Esta autorização é gratuita, sem qualquer expectativa de compensação financeira, e não possui limitação de tempo ou território.<br><br>
+
+<strong>Consentimento:</strong><br>
+- Declaro que li, compreendi e estou de acordo com as condições descritas acima;<br>
+- Autorizo a instituição a utilizar, reproduzir e divulgar os registros do(a) aluno(a), somente para os fins previstos neste termo;<br>
+- Estou ciente de que esta autorização pode ser revogada a qualquer momento mediante solicitação formal, respeitando, entretanto, a utilização já realizada.<br><br>
+
+Ao marcar a opção de consentimento, confirmo minha ciência, concordância e autorização expressa para o uso da imagem, voz e nome do(a) aluno(a) nos termos acima.
+        </p>
+      </div>
+
+      <div class="form-group toggle-container">
+        <label class="termos-inline">
+          <input type="checkbox" id="termos" disabled required>
+          <span class="slider"></span>
+          Eu responsável declaro que li e concordo com os termos acima.
+        </label>
+      </div>
+    </section>
+
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <!-- =================== script =================== -->
+  <script>
+     const API_URL = "https://saberviver-api.up.railway.app";
+
+    // ======== geração da data ======== //
+    const diaSelect = document.getElementById('dia');
+    for (let i = 1; i <= 31; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.text = i;
+      diaSelect.add(option);
+    }
+
+    const anoSelect = document.getElementById('ano');
+    const anoAtual = new Date().getFullYear();
+    for (let i = anoAtual; i >= 1900; i--) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.text = i;
+      anoSelect.add(option);
+    }
+
+    // ======== mascaras ========
+    function aplicarMascaraCPF(campo) {
+      campo.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length > 11) value = value.slice(0, 11);
+        value = value.replace(/(\d{3})(\d)/, "$1.$2");
+        value = value.replace(/(\d{3})(\d)/, "$1.$2");
+        value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        e.target.value = value;
+      });
+    }
+    aplicarMascaraCPF(document.getElementById('cpfResponsavel'));
+    aplicarMascaraCPF(document.getElementById('cpf'));
+
+    function aplicarMascaraTelefone(campo) {
+      campo.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length > 11) value = value.slice(0, 11);
+        value = value.replace(/^(\d{2})(\d)/g, "($1) $2");
+        value = value.replace(/(\d{5})(\d{4})$/, "$1-$2");
+        e.target.value = value;
+      });
+    }
+    aplicarMascaraTelefone(document.getElementById('telefonePrincipal'));
+    aplicarMascaraTelefone(document.getElementById('telefoneOpcional'));
+
+    // ======== somente letras  ========
+    function permitirSomenteLetras(campo) {
+      campo.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
+      });
+    }
+
+    ['nomeResponsavel','nome','sobreNome','apelido'].forEach(id => {
+      const campo = document.getElementById(id);
+      if (campo) permitirSomenteLetras(campo);
+    });
+
+    // ======== listar atividades ========
+    function carregarAtividades() {
+        console.log('🔄 Carregando atividades...');
+        
+        // Obter elementos DOM dentro da função para garantir que existem
+        const listaDiv = document.getElementById('listaAtividades');
+        const hiddenInput = document.getElementById('atividadesSelecionadas');
+        
+        // Verificar se os elementos existem
+        if (!listaDiv || !hiddenInput) {
+            console.error('❌ Elementos HTML não encontrados:', { listaDiv, hiddenInput });
+            return;
+        }
+        
+        // Mostrar loading
+        listaDiv.innerHTML = "<p style='font-size:14px;color:#555;'>Carregando atividades...</p>";
+        
+        // Configurar headers adequados para CORS
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+            },
+            mode: 'cors',
+            credentials: 'omit'
+        };
+        
+        fetch('https://saberviver-api.up.railway.app/atividades/publico', requestOptions)
+            .then(response => {
+                console.log('📡 Resposta da API:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(atividades => {
+                console.log('📊 Dados recebidos:', atividades);
+                const lista = atividades.content || []; // pega o array dentro de content
+                
+                listaDiv.innerHTML = "";
+                if (lista.length === 0) {
+                    listaDiv.innerHTML = "<p style='font-size:14px;color:#555;'>Nenhuma atividade cadastrada.</p>";
+                    return;
+                }
+                
+                console.log(`✅ ${lista.length} atividades encontradas`);
+                lista.forEach(atividade => {
+                    const label = document.createElement("label");
+                    label.classList.add("atividade-item");
+                    label.innerHTML = `
+                        <input type="checkbox" value="${atividade.id}" class="atividade-checkbox">
+                        <strong>${atividade.nome}</strong> — ${atividade.descricao} 
+                        <span style="color:#5264ff;">(${atividade.vagas} vagas)</span>
+                    `;
+                    listaDiv.appendChild(label);
+                });
+                
+                // Adicionar eventos de mudança para atualizar automaticamente as atividades selecionadas
+                adicionarEventosAtividades();
+                console.log('✅ Atividades carregadas com sucesso');
+            })
+            .catch(error => {
+                console.error('❌ Erro ao carregar atividades:', error);
+                
+                // Fallback - mostrar atividades predefinidas se a API falhar devido ao CORS
+                if (error.message.includes('CORS') || error.message.includes('403') || error.message.includes('blocked')) {
+                    console.log('🔄 Aplicando fallback devido a erro de CORS...');
+                    carregarAtividadesFallback();
+                } else {
+                    listaDiv.innerHTML = `
+                        <div style="padding: 15px; background: #fee2e2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626;">
+                            <strong>⚠️ Erro ao carregar atividades</strong><br>
+                            <small>Verifique sua conexão e tente novamente.</small><br>
+                            <button type="button" onclick="carregarAtividades()" style="margin-top: 10px; padding: 5px 10px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                🔄 Tentar Novamente
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+    }
+
+    // Função de fallback para mostrar atividades quando há problemas de CORS
+    function carregarAtividadesFallback() {
+        console.log('📋 Carregando atividades em modo fallback...');
+        
+        const listaDiv = document.getElementById('listaAtividades');
+        
+        // Atividades predefinidas como fallback
+        const atividadesFallback = [
+            { id: 1, nome: "Natação", descricao: "Aulas de natação para todas as idades", vagas: 20 },
+            { id: 2, nome: "Futebol", descricao: "Escolinha de futebol infantil", vagas: 15 },
+            { id: 3, nome: "Basquete", descricao: "Treinos de basquete", vagas: 12 },
+            { id: 4, nome: "Judô", descricao: "Aulas de judô e defesa pessoal", vagas: 10 },
+            { id: 5, nome: "Ballet", descricao: "Aulas de ballet clássico", vagas: 8 }
+        ];
+        
+        listaDiv.innerHTML = "";
+        listaDiv.innerHTML += "<p style='font-size:12px;color:#e67e22;margin-bottom:10px;'><strong>⚠️ Modo offline:</strong> Algumas atividades podem não estar atualizadas</p>";
+        
+        atividadesFallback.forEach(atividade => {
+            const label = document.createElement("label");
+            label.classList.add("atividade-item");
+            label.innerHTML = `
+                <input type="checkbox" value="${atividade.id}" class="atividade-checkbox">
+                <strong>${atividade.nome}</strong> — ${atividade.descricao} 
+                <span style="color:#5264ff;">(${atividade.vagas} vagas)</span>
+            `;
+            listaDiv.appendChild(label);
+        });
+        
+        // Adicionar eventos de mudança para atualizar automaticamente as atividades selecionadas
+        adicionarEventosAtividades();
+        console.log('✅ Atividades fallback carregadas');
+    }
+
+    // Função para adicionar eventos aos checkboxes de atividades
+    function adicionarEventosAtividades() {
+        const checkboxes = document.querySelectorAll('.atividade-checkbox');
+        const hiddenInput = document.getElementById('atividadesSelecionadas');
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const selecionadas = Array.from(document.querySelectorAll('.atividade-checkbox:checked')).map(c => c.value);
+                hiddenInput.value = selecionadas.join(',');
+                console.log('🎯 Atividades selecionadas:', selecionadas);
+            });
+        });
+    }
+
+    // Executar quando o DOM estiver carregado
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('📄 DOM carregado, iniciando carregamento de atividades...');
+        carregarAtividades();
+    });
+
+    // ======== toogle termos ========
+    const toggleBtn = document.getElementById('toggleTermos');
+    const termosTexto = document.getElementById('termosTexto');
+    const checkboxTermos = document.getElementById('termos');
+
+    toggleBtn.addEventListener('click', () => {
+      if (termosTexto.style.display === "none") {
+        termosTexto.style.display = "block";
+        toggleBtn.textContent = "Ocultar Termos";
+        checkboxTermos.disabled = false;
+      } else {
+        termosTexto.style.display = "none";
+        toggleBtn.textContent = "Mostrar Termos";
+        checkboxTermos.checked = false;
+        checkboxTermos.disabled = true;
+      }
+    });
+
+    // ======== validação dos termos ========
+   document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!checkboxTermos.checked) {
+    alert("Você deve abrir e aceitar os termos antes de concluir o cadastro.");
+    return;
+  }
+
+  // Verificar se pelo menos uma atividade foi selecionada
+  const hiddenInput = document.getElementById('atividadesSelecionadas');
+  const atividadesSelecionadas = hiddenInput.value ? hiddenInput.value.split(',').filter(id => id.trim() !== '') : [];
+  
+  if (atividadesSelecionadas.length === 0) {
+    alert("Você deve selecionar pelo menos uma atividade antes de concluir o cadastro.");
+    return;
+  }
+
+  // Monta o objeto com os dados do formulário
+const dia = document.getElementById("dia").value.padStart(2, "0");
+const mes = document.getElementById("mes").value.padStart(2, "0");
+const ano = document.getElementById("ano").value;
+
+const alunoData = {
+  nome: document.getElementById("nome").value.trim(),
+  sobreNome: document.getElementById("sobreNome").value.trim(),
+  cpf: document.getElementById("cpf").value.replace(/\D/g, ""),
+  apelido: document.getElementById("apelido").value.trim() || null,
+  dataNascimento: `${ano}-${mes}-${dia}`, // 👈 agora formato ISO correto
+  nomeResponsavel: document.getElementById("nomeResponsavel").value.trim(),
+  cpfResponsavel: document.getElementById("cpfResponsavel").value.replace(/\D/g, "") || null,
+  telefonePrincipal: document.getElementById("telefonePrincipal").value.replace(/\D/g, ""),
+  telefoneOpcional: document.getElementById("telefoneOpcional").value.replace(/\D/g, "") || null,
+  atividade: hiddenInput.value ? hiddenInput.value.split(",").map(id => Number(id)) : [],
+  termoAutorizado: document.getElementById("termos").checked
+};
+  try {
+    // Configurar headers adequados para CORS
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+      },
+      mode: 'cors',
+      credentials: 'omit',
+      body: JSON.stringify(alunoData)
+    };
+
+    const resposta = await fetch("https://saberviver-api.up.railway.app/alunos/publico", requestOptions);
+
+    if (resposta.ok) {
+      mostrarNotificacao("Cadastro concluído com sucesso!", "#4CAF50");
+      e.target.reset();
+      hiddenInput.value = "";
+    } else {
+      const erro = await resposta.text();
+      mostrarNotificacao("Erro ao cadastrar: " + erro, "red");
+    }
+  } catch (erro) {
+    console.error('❌ Erro detalhado:', erro);
+    
+    // Verificar se é erro de CORS
+    if (erro.message.includes('CORS') || erro.message.includes('blocked') || erro.message.includes('403')) {
+      mostrarNotificacao("⚠️ Erro de CORS detectado. Tente abrir em um servidor local ou contate o administrador.", "#e67e22");
+    } else if (erro.name === 'TypeError' && erro.message.includes('Failed to fetch')) {
+      mostrarNotificacao("❌ Erro de conexão. Verifique sua internet e tente novamente.", "red");
+    } else {
+      mostrarNotificacao("❌ Erro inesperado: " + erro.message, "red");
+    }
+  }
+});
+    // ======== notificação ========
+    function mostrarNotificacao(mensagem, cor = "#4CAF50") {
+      const notif = document.getElementById("notificacao");
+      notif.textContent = mensagem;
+      notif.style.background = cor;
+      notif.classList.add("show");
+      setTimeout(() => notif.classList.remove("show"), 4000);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("status") === "ok") {
+      mostrarNotificacao("Cadastro concluído com sucesso!");
+    }
+  </script>
+
+</body>
+</html>

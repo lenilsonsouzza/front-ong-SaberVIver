@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Gestão</title>
+  <link rel="stylesheet" href="painelstyle.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="main">
+    <!-- Header -->
+    <div class="header">
+      <!-- Botão de Logout no canto superior esquerdo -->
+      <div class="logout-container">
+        <button class="logout-btn" onclick="logoutToHome()" title="Voltar ao Início">
+          <i class="fas fa-arrow-left"></i>
+          <span>Sair</span>
+        </button>
+      </div>
+      
+      <div class="header-info">
+        <h2 id="welcome">Seja bem-vindo!</h2>
+        <span class="user-role" id="user-role-badge"></span>
+        <span class="test-mode-badge" id="test-mode-badge" style="display: none;">🧪 MODO TESTE</span>
+      </div>
+      <div class="profile-menu">
+        <div class="profile" id="profile-pic" onclick="toggleProfileMenu(event)">
+          <span class="profile-text">A</span>
+          <img src="" alt="Foto de Perfil" class="profile-image" style="display: none;">
+          <div class="profile-dropdown">
+            <div class="profile-dropdown-item" onclick="handleProfilePicture()">
+              <i class="fas fa-camera"></i>
+              Alterar Foto
+            </div>
+            <div class="profile-dropdown-item" onclick="resetSampleData()">
+              <i class="fas fa-refresh"></i>
+              Recarregar Dados Exemplo
+            </div>
+            <div class="profile-dropdown-item" onclick="addRandomData()">
+              <i class="fas fa-plus-circle"></i>
+              Adicionar Dados Aleatórios
+            </div>
+            <div class="profile-dropdown-item" onclick="clearAllData()">
+              <i class="fas fa-trash"></i>
+              Limpar Todos os Dados
+            </div>
+            <div class="profile-dropdown-item" onclick="switchUserType()">
+              <i class="fas fa-user-switch"></i>
+              Alternar Tipo de Usuário
+            </div>
+            <div class="profile-dropdown-item" onclick="handleLogout()">
+              <i class="fas fa-sign-out-alt"></i>
+              Sair do Sistema
+            </div>
+          </div>
+        </div>
+        <input type="file" id="profile-upload" accept="image/*" style="display: none;">
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+      <!-- Meus Dados: Apenas VOLUNTARIO e ADMIN (ADM_MASTER não tem acesso) -->
+      <button class="tab active volunteer-and-admin-only" id="meus-dados-btn" onclick="openTab('meus-dados-tab', event)">
+        <i class="fas fa-user-cog"></i>
+        Meus Dados
+      </button>
+      <!-- Gerenciar Alunos: VOLUNTARIO, ADMIN e ADM_MASTER -->
+      <button class="tab all-roles" onclick="openTab('gerenciar-alunos-tab', event)">
+        <i class="fas fa-users"></i>
+        Gerenciar Alunos
+      </button>
+      <!-- Gerenciar Atividades: VOLUNTARIO, ADMIN e ADM_MASTER -->
+      <button class="tab all-roles" onclick="openTab('gerenciar-atividades-tab', event)">
+        <i class="fas fa-futbol"></i>
+        Gerenciar Atividades
+      </button>
+      <!-- Gerenciar Voluntários: ADMIN e ADM_MASTER -->
+      <button class="tab admin-and-master" onclick="openTab('gerenciar-voluntarios-tab', event)">
+        <i class="fas fa-user-tie"></i>
+        Gerenciar Voluntários
+      </button>
+      <!-- Gerenciar ADM: Apenas ADM_MASTER -->
+      <button class="tab master-only" id="gerenciar-adm-btn" onclick="openTab('gerenciar-adm-tab', event)">
+        <i class="fas fa-user-shield"></i>
+        Gerenciar ADM
+      </button>
+    </div>
+
+    <!-- Tab Content: Meus Dados (VOLUNTARIO e ADMIN apenas) -->
+    <div id="meus-dados-tab" class="tab-content active volunteer-and-admin-only">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-user-edit"></i>
+            Minhas Informações
+          </h2>
+          <button class="create-btn" onclick="editMyData()">
+            <i class="fas fa-edit"></i>
+            Editar Dados
+          </button>
+        </div>
+        <div class="card-content" id="my-data-content">
+          <div class="loading-message">Carregando dados...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content: Gerenciar Alunos -->
+    <div id="gerenciar-alunos-tab" class="tab-content all-roles">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-users"></i>
+            Gerenciar Alunos
+          </h2>
+          <div class="header-actions">
+            <div class="search-container">
+              <input type="text" id="search-alunos" placeholder="Buscar por nome ou CPF..." class="search-input" oninput="searchAlunos()">
+              <button class="search-btn" onclick="searchAlunos()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+            <button class="create-btn" onclick="openStudentModal()">
+              <i class="fas fa-plus"></i>
+              Cadastrar Aluno
+            </button>
+          </div>
+        </div>
+        <div class="card-content">
+          <ul id="alunos-list" class="lista-itens">
+            <li class="loading-message">Carregando alunos...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content: Gerenciar Atividades -->
+    <div id="gerenciar-atividades-tab" class="tab-content all-roles">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-futbol"></i>
+            Gerenciar Atividades
+          </h2>
+          <button class="create-btn" onclick="openActivityModal()">
+            <i class="fas fa-plus"></i>
+            Criar Atividade
+          </button>
+        </div>
+        <div class="card-content">
+          <ul id="atividades-list" class="lista-itens">
+            <li class="loading-message">Carregando atividades...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content: Gerenciar Voluntários -->
+    <div id="gerenciar-voluntarios-tab" class="tab-content admin-and-master">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-user-tie"></i>
+            Gerenciar Voluntários
+          </h2>
+          <div class="header-actions">
+            <div class="search-container">
+              <input type="text" id="search-voluntarios" placeholder="Buscar por nome ou CPF..." class="search-input" oninput="searchVoluntarios()">
+              <button class="search-btn" onclick="searchVoluntarios()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+            <button class="create-btn" onclick="openVolunteerModal()">
+              <i class="fas fa-plus"></i>
+              Cadastrar Voluntário
+            </button>
+          </div>
+        </div>
+        <div class="card-content">
+          <ul id="voluntarios-list" class="lista-itens">
+            <li class="loading-message">Carregando voluntários...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content: Gerenciar ADM (ADM_MASTER Only) -->
+    <div id="gerenciar-adm-tab" class="tab-content master-only" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-user-shield"></i>
+            Gerenciar Administradores
+          </h2>
+          <div class="header-actions">
+            <div class="search-container">
+              <input type="text" id="search-admins" placeholder="Buscar por nome ou CPF..." class="search-input">
+              <button class="search-btn" onclick="searchAdmins()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+            <button class="create-btn" onclick="openAdminModal()">
+              <i class="fas fa-plus"></i>
+              Cadastrar ADM
+            </button>
+          </div>
+        </div>
+        <div class="card-content">
+          <ul id="admins-list" class="lista-itens">
+            <li class="loading-message">Carregando administradores...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nova Atividade -->
+  <div id="activity-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-plus-circle"></i> Criar Nova Atividade</h2>
+        <button class="close-btn" onclick="closeActivityModal()">&times;</button>
+      </div>
+      <form id="activity-form" class="modal-form">
+        <div class="form-group">
+          <label for="atividade-nome" class="required">
+            <i class="fas fa-tag"></i>
+            Nome da Atividade
+          </label>
+          <input 
+            type="text" 
+            id="atividade-nome" 
+            name="atividade-nome" 
+            placeholder="Ex: Futebol, Natação, Vôlei..."
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="atividade-descricao" class="optional">
+            <i class="fas fa-align-left"></i>
+            Descrição da Atividade
+          </label>
+          <textarea 
+            id="atividade-descricao" 
+            name="atividade-descricao" 
+            placeholder="Descreva a atividade, objetivos, público-alvo..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeActivityModal()">
+            <i class="fas fa-times"></i>
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Salvar Atividade
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Visualizar Atividade -->
+  <div id="view-activity-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="view-activity-title">
+          <i class="fas fa-eye"></i>
+          Detalhes da Atividade
+        </h2>
+        <button class="close-btn" onclick="closeViewActivityModal()">&times;</button>
+      </div>
+      <div class="activity-details">
+        <div class="detail-item">
+          <strong><i class="fas fa-tag"></i> Nome:</strong>
+          <span id="view-activity-nome">-</span>
+        </div>
+        <div class="detail-item">
+          <strong><i class="fas fa-align-left"></i> Descrição:</strong>
+          <span id="view-activity-descricao">-</span>
+        </div>
+        <div class="detail-item">
+          <strong><i class="fas fa-graduation-cap"></i> Alunos Inscritos:</strong>
+          <ul id="alunos-inscritos" class="lista-itens">
+            <li class="empty-message">Carregando alunos...</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Botões de Ação -->
+      <div class="modal-actions">
+        <!-- Botão Editar: Todos os usuários podem editar -->
+        <button type="button" class="btn-secondary" onclick="openEditActivityModal()">
+          <i class="fas fa-edit"></i>
+          Editar Atividade
+        </button>
+        
+        <!-- Botão Deletar: Apenas ADMIN e ADM_MASTER -->
+        <button type="button" class="btn-danger admin-and-master" onclick="deletarAtividade()">
+          <i class="fas fa-trash"></i>
+          Excluir Atividade
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Editar Atividade -->
+  <div id="edit-activity-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>
+          <i class="fas fa-edit"></i>
+          Editar Atividade
+        </h2>
+        <button class="close-btn" onclick="closeEditActivityModal()">&times;</button>
+      </div>
+      <form id="edit-activity-form" class="modal-form">
+        <div class="form-group">
+          <label for="edit-activity-nome">
+            <i class="fas fa-tag"></i>
+            Nome da Atividade *
+          </label>
+          <input type="text" id="edit-activity-nome" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-activity-descricao">
+            <i class="fas fa-align-left"></i>
+            Descrição da Atividade
+          </label>
+          <textarea id="edit-activity-descricao" rows="3" placeholder="Descreva a atividade, objetivos, público-alvo..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Novo Aluno -->
+  <div id="student-modal" class="modal">
+    <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h2><i class="fas fa-user-plus"></i> Cadastrar Novo Aluno</h2>
+        <button class="close-btn" onclick="closeStudentModal()">&times;</button>
+      </div>
+      
+      <!-- Barra de notificação do modal -->
+      <div id="modal-notificacao" class="notificacao" style="display: none; margin: 15px; border-radius: 8px;"></div>
+      
+      <form id="student-form" class="modal-form">
+        <!-- Dados do Responsável -->
+        <div class="form-section">
+          <h3 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 5px; margin-bottom: 15px;">
+            <i class="fas fa-user-shield"></i> Dados do Responsável
+          </h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="aluno-nome_responsavel" class="required">
+                <i class="fas fa-user"></i>
+                Nome do Responsável
+              </label>
+              <input 
+                type="text" 
+                id="aluno-nome_responsavel"
+                name="nome_responsavel"
+                placeholder="Nome completo do responsável"
+                pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+                onkeypress="return /[A-Za-zÀ-ÖØ-öø-ÿ\s]/.test(event.key)"
+                required
+              >
+              <span class="required-text">Campo obrigatório</span>
+            </div>
+
+            <div class="form-group">
+              <label for="aluno-cpf_responsavel" class="required">
+                <i class="fas fa-id-card"></i>
+                CPF do Responsável
+              </label>
+              <input 
+                type="text" 
+                id="aluno-cpf_responsavel"
+                name="cpf_responsavel"
+                placeholder="000.000.000-00"
+                maxlength="14"
+                required
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                oninput="formatCPF(this)"
+              >
+              <span class="required-text">Campo obrigatório</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="aluno-telefone_principal" class="required">
+                <i class="fas fa-phone"></i>
+                Telefone Principal
+              </label>
+              <input 
+                type="tel" 
+                id="aluno-telefone_principal"
+                name="telefone_principal"
+                placeholder="(11) 99999-9999"
+                pattern="\([0-9]{2}\)\s[0-9]{4,5}-[0-9]{4}" 
+                maxlength="15"
+                required
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                oninput="formatPhone(this)"
+              >
+              <span class="required-text">Campo obrigatório</span>
+            </div>
+
+            <div class="form-group">
+              <label for="aluno-telefone_opcional" class="optional">
+                <i class="fas fa-phone"></i>
+                Telefone Alternativo
+              </label>
+              <input 
+                type="tel" 
+                id="aluno-telefone_opcional"
+                name="telefone_opcional"
+                placeholder="(11) 99999-9999"
+                pattern="\([0-9]{2}\)\s[0-9]{4,5}-[0-9]{4}" 
+                maxlength="15"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                oninput="formatPhone(this)"
+              >
+            </div>
+          </div>
+        </div>
+
+        <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+
+        <!-- Dados do Aluno -->
+        <div class="form-section">
+          <h3 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 5px; margin-bottom: 15px;">
+            <i class="fas fa-child"></i> Dados do Aluno
+          </h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="aluno-nome" class="required">
+                <i class="fas fa-user"></i>
+                Nome do Aluno
+              </label>
+              <input 
+                type="text" 
+                id="aluno-nome"
+                name="nome"
+                placeholder="Primeiro nome do aluno"
+                pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+                onkeypress="return /[A-Za-zÀ-ÖØ-öø-ÿ\s]/.test(event.key)"
+                required
+              >
+              <span class="required-text">Campo obrigatório</span>
+            </div>
+
+            <div class="form-group">
+              <label for="aluno-sobre_nome" class="required">
+                <i class="fas fa-user"></i>
+                Sobrenome do Aluno
+              </label>
+              <input 
+                type="text" 
+                id="aluno-sobre_nome"
+                name="sobre_nome"
+                placeholder="Sobrenome do aluno"
+                pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+                onkeypress="return /[A-Za-zÀ-ÖØ-öø-ÿ\s]/.test(event.key)"
+                required
+              >
+              <span class="required-text">Campo obrigatório</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="aluno-apelido" class="optional">
+                <i class="fas fa-smile"></i>
+                Apelido
+              </label>
+              <input 
+                type="text" 
+                id="aluno-apelido"
+                name="apelido"
+                placeholder="Como gosta de ser chamado (opcional)"
+                pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+                onkeypress="return /[A-Za-zÀ-ÖØ-öø-ÿ\s]/.test(event.key)"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="aluno-cpf" class="optional">
+                <i class="fas fa-id-card"></i>
+                CPF do Aluno
+              </label>
+              <input 
+                type="text" 
+                id="aluno-cpf"
+                name="cpf"
+                placeholder="000.000.000-00"
+                maxlength="14"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                oninput="formatCPF(this)"
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="required">
+              <i class="fas fa-birthday-cake"></i>
+              Data de Nascimento
+            </label>
+            <div class="dob-container" style="display: flex; gap: 10px;">
+              <select id="aluno-dia" name="dia" required style="flex: 1;">
+                <option value="">Dia</option>
+              </select>
+              <select id="aluno-mes" name="mes" required style="flex: 2;">
+                <option value="">Mês</option>
+                <option value="01">Janeiro</option>
+                <option value="02">Fevereiro</option>
+                <option value="03">Março</option>
+                <option value="04">Abril</option>
+                <option value="05">Maio</option>
+                <option value="06">Junho</option>
+                <option value="07">Julho</option>
+                <option value="08">Agosto</option>
+                <option value="09">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+              <select id="aluno-ano" name="ano" required style="flex: 1;">
+                <option value="">Ano</option>
+              </select>
+            </div>
+            <span class="required-text">Campo obrigatório</span>
+          </div>
+
+          <!-- Atividades Disponíveis -->
+          <div class="form-group">
+            <label class="required">
+              <i class="fas fa-clipboard-list"></i>
+              Atividades Disponíveis
+            </label>
+            <div class="atividades-container">
+              <div class="atividades-header">
+                <span class="atividades-info">
+                  <i class="fas fa-info-circle"></i>
+                  Selecione uma ou mais atividades de interesse
+                </span>
+                <span class="atividades-counter" id="contador-atividades">0 selecionadas</span>
+              </div>
+              <div id="modal-lista-atividades" class="atividades-lista">
+                <div class="loading-atividades">
+                  <i class="fas fa-spinner fa-spin"></i>
+                  <span>Carregando atividades...</span>
+                </div>
+              </div>
+            </div>
+            <span class="required-text">Selecione pelo menos uma atividade</span>
+            <input type="hidden" name="atividades_selecionadas" id="modal-atividades-selecionadas">
+          </div>
+        </div>
+
+        <div class="modal-actions" style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #ddd;">
+          <button type="button" class="btn-cancel" onclick="closeStudentModal()">
+            <i class="fas fa-times"></i>
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Cadastrar Aluno
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Visualizar/Editar Aluno -->
+  <div id="view-student-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-user-edit"></i> Detalhes do Aluno</h2>
+        <button class="close-btn" onclick="closeViewStudentModal()">&times;</button>
+      </div>
+      <form id="edit-student-form" class="modal-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-aluno-nome">
+              <i class="fas fa-user"></i>
+              Nome:
+            </label>
+            <input 
+              type="text" 
+              id="edit-aluno-nome"
+              name="nome"
+              pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="edit-aluno-sobrenome">
+              <i class="fas fa-user"></i>
+              Sobrenome:
+            </label>
+            <input 
+              type="text" 
+              id="edit-aluno-sobrenome"
+              name="sobre_nome"
+              pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+              required
+            >
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-aluno-cpf">
+              <i class="fas fa-id-card"></i>
+              CPF do Aluno:
+            </label>
+            <input 
+              type="text" 
+              id="edit-aluno-cpf"
+              name="cpf"
+              maxlength="14"
+              required
+              onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+              oninput="formatCPF(this)"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="edit-aluno-data-nascimento">
+              <i class="fas fa-birthday-cake"></i>
+              Data de Nascimento:
+            </label>
+            <input 
+              type="date" 
+              id="edit-aluno-data-nascimento" 
+              name="data_nascimento"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-aluno-apelido">
+              <i class="fas fa-smile"></i>
+              Apelido:
+            </label>
+            <input type="text" id="edit-aluno-apelido" name="apelido">
+          </div>
+
+
+        </div>
+
+        <div class="form-group">
+          <label for="edit-aluno-nome-responsavel">
+            <i class="fas fa-user-shield"></i>
+            Nome do Responsável:
+          </label>
+          <input 
+            type="text" 
+            id="edit-aluno-nome-responsavel"
+            name="nome_responsavel"
+            pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-aluno-telefone-principal">
+              <i class="fas fa-phone"></i>
+              Telefone Principal:
+            </label>
+            <input 
+              type="tel" 
+              id="edit-aluno-telefone-principal"
+              name="telefone_principal"
+              pattern="\([0-9]{2}\)\s[0-9]{4,5}-[0-9]{4}" 
+              maxlength="15"
+              required
+              oninput="formatPhone(this)"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="edit-aluno-telefone-opcional">
+              <i class="fas fa-phone"></i>
+              Telefone Opcional:
+            </label>
+            <input 
+              type="tel" 
+              id="edit-aluno-telefone-opcional"
+              name="telefone_opcional"
+              pattern="\([0-9]{2}\)\s[0-9]{4,5}-[0-9]{4}" 
+              maxlength="15"
+              oninput="formatPhone(this)"
+            >
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-aluno-cpf-responsavel">
+              <i class="fas fa-id-card"></i>
+              CPF do Responsável:
+            </label>
+            <input 
+              type="text" 
+              id="edit-aluno-cpf-responsavel"
+              name="cpf_responsavel"
+              maxlength="14"
+              oninput="formatCPF(this)"
+            >
+          </div>
+          
+          <div class="form-group">
+            <!-- Campo vazio para alinhamento -->
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-aluno-atividade">
+            <i class="fas fa-clipboard-list"></i>
+            Atividade:
+          </label>
+          <select id="edit-aluno-atividade" name="atividade" required></select>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <i class="fas fa-toggle-on"></i>
+            Status do Aluno:
+          </label>
+          <div class="status-toggle">
+            <div class="status-toggle-wrapper">
+              <div class="toggle-switch active" id="student-status-toggle" onclick="toggleStudentStatus()">
+                <div class="toggle-slider">
+                  <i class="fas fa-check"></i>
+                </div>
+              </div>
+              <span class="toggle-label" id="student-status-label">Ativo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <!-- Deletar Aluno: Apenas ADMIN e ADM_MASTER -->
+          <button 
+            type="button" 
+            class="btn-danger admin-and-master" 
+            onclick="deletarRegistro('alunos', document.getElementById('edit-student-form').dataset.alunoId)"
+          >
+            <i class="fas fa-trash"></i>
+            Excluir Aluno
+          </button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Novo voluntario (Admin Only) -->
+  <div id="collaborator-modal" class="modal admin-only" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-user-plus"></i> Adicionar Novo voluntario</h2>
+        <button class="close-btn" onclick="closeCollaboratorModal()">&times;</button>
+      </div>
+  <form id="voluntario-form" class="modal-form">
+        <div class="form-group">
+          <label for="voluntario-nome" class="required">
+            <i class="fas fa-user"></i>
+            Nome Completo
+          </label>
+          <input
+            type="text" 
+            id="voluntario-nome"
+            name="nome"
+            placeholder="Nome completo do voluntario"
+            pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="collaborator-login" class="required">
+              <i class="fas fa-user-circle"></i>
+              Login
+            </label>
+            <input type="text" id="voluntario-login" name="login" placeholder="Login de acesso" required>
+          </div>
+
+          <div class="form-group">
+            <label for="collaborator-data-nascimento" class="required">
+              <i class="fas fa-birthday-cake"></i>
+              Data de Nascimento
+            </label>
+            <input type="date" id="voluntario-data-nascimento" name="dataNascimento" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="collaborator-email" class="required">
+              <i class="fas fa-envelope"></i>
+              Email
+            </label>
+            <input 
+              type="email" 
+              id="voluntario-email"
+              name="email"
+              placeholder="email@exemplo.com"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="collaborator-telefone" class="required">
+              <i class="fas fa-phone"></i>
+              Telefone
+            </label>
+            <input 
+              type="tel" 
+              id="voluntario-telefone"
+              name="telefone"
+              placeholder="(11) 99999-9999"
+              pattern="\([0-9]{2}\)\s[0-9]{4,5}-[0-9]{4}" 
+              maxlength="15"
+              required
+              oninput="formatPhone(this)"
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="collaborator-cpf" class="optional">
+              <i class="fas fa-id-card"></i>
+              CPF
+            </label>
+            <input 
+              type="text" 
+              id="voluntario-cpf"
+              name="cpf"
+              placeholder="000.000.000-00"
+              maxlength="14"
+              onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+              oninput="formatCPF(this)"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="collaborator-atividade" class="optional">
+              <i class="fas fa-clipboard-list"></i>
+              Atividade
+            </label>
+            <select id="voluntario-atividade" name="atividade">
+              <option value="">Selecione uma atividade (opcional)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="collaborator-senha" class="optional">
+            <i class="fas fa-lock"></i>
+            Senha
+          </label>
+          <input 
+            type="password" 
+            id="voluntario-senha"
+            name="senha"
+            placeholder="Senha de acesso ao sistema (deixe em branco para usar padrão)"
+            minlength="6"
+          >
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeCollaboratorModal()">
+
+          <div class="form-group">
+            <label for="voluntario-sobreNome" class="optional">
+              <i class="fas fa-user"></i>
+              Sobrenome
+            </label>
+            <input type="text" id="voluntario-sobreNome" name="sobreNome" placeholder="Sobrenome">
+          </div>
+            <i class="fas fa-times"></i>
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Salvar voluntario
+        <!-- Status do voluntário removido -->
+            <i class="fas fa-user"></i>
+            Nome Completo:
+          </label>
+          <input 
+            type="text" 
+            id="edit-voluntario-nome"
+            name="nome"
+            pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-voluntario-email">
+              <i class="fas fa-envelope"></i>
+              Email:
+            </label>
+            <input 
+              type="email" 
+              id="edit-voluntario-email"
+              name="email"
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="voluntario-areaAtuacao" class="optional">
+              <i class="fas fa-briefcase"></i>
+              Área de Atuação
+            </label>
+            <input type="text" id="voluntario-areaAtuacao" name="areaAtuacao" placeholder="Ex: Educação, Saúde">
+          </div>
+
+          <div class="form-group">
+            <label for="voluntario-turma" class="optional">
+              <i class="fas fa-users"></i>
+              Turma
+            </label>
+            <input type="text" id="voluntario-turma" name="turma" placeholder="Turma (opcional)">
+          </div>
+        </div>
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="edit-voluntario-telefone">
+              <i class="fas fa-phone"></i>
+              Telefone:
+            </label>
+            <input 
+              type="tel" 
+              id="edit-voluntario-telefone"
+              name="telefone"
+              pattern="\([0-9]{2}\)\s[0-9]{4,5}-[0-9]{4}" 
+              maxlength="15"
+              required
+              oninput="formatPhone(this)"
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-voluntario-cpf">
+              <i class="fas fa-id-card"></i>
+              CPF:
+            </label>
+            <input 
+              type="text" 
+              id="edit-voluntario-cpf"
+              name="cpf"
+              maxlength="14"
+              required
+              oninput="formatCPF(this)"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="edit-voluntario-atividade">
+              <i class="fas fa-clipboard-list"></i>
+              Atividade:
+            </label>
+            <select id="edit-voluntario-atividade" name="atividade" required></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <i class="fas fa-toggle-on"></i>
+            Status do voluntario:
+          </label>
+          <div class="status-toggle">
+            <div class="status-toggle-wrapper">
+              <div class="toggle-switch active" id="voluntario-status-toggle" onclick="toggleVolunteerStatus()">
+                <div class="toggle-slider">
+                  <i class="fas fa-check"></i>
+                </div>
+              </div>
+              <span class="toggle-label" id="voluntario-status-label">Ativo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <!-- Deletar voluntario: Apenas ADMIN e ADM_MASTER -->
+          <button 
+            type="button" 
+            class="btn-danger admin-and-master" 
+            onclick="deletarRegistro('voluntarioes', document.getElementById('edit-collaborator-form').dataset.voluntarioId)"
+          >
+            <i class="fas fa-trash"></i>
+            Excluir voluntario
+          </button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+        <!-- Status do voluntário removido -->
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Carregando...</p>
+    </div>
+  </div>
+
+  <!-- Modal: Visualizar Aluno -->
+  <div id="view-aluno-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>
+          <i class="fas fa-user-graduate"></i>
+          Informações do Aluno
+        </h3>
+        <button class="close-btn" onclick="closeViewAlunoModal()">&times;</button>
+      </div>
+      <div id="aluno-info-content">
+        <p>Carregando...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Editar Meus Dados -->
+  <div id="edit-my-data-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>
+          <i class="fas fa-user-edit"></i>
+          Editar Meus Dados
+        </h3>
+        <button class="close-btn" onclick="closeEditMyDataModal()">&times;</button>
+      </div>
+      <form id="edit-my-data-form" class="modal-form">
+        <div class="form-group">
+          <label for="edit-my-nome" class="required">
+            <i class="fas fa-user"></i>
+            Nome Completo
+          </label>
+          <input
+            type="text" 
+            id="edit-my-nome"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-my-email" class="required">
+              <i class="fas fa-envelope"></i>
+              Email
+            </label>
+            <input 
+              type="email" 
+              id="edit-my-email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="edit-my-telefone" class="required">
+              <i class="fas fa-phone"></i>
+              Telefone
+            </label>
+            <input 
+              type="tel" 
+              id="edit-my-telefone"
+              pattern="\([0-9]{2}\)\s[0-9]{4,5}-[0-9]{4}"
+              maxlength="15"
+              required
+              oninput="formatPhone(this)"
+            >
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancelar" onclick="closeEditMyDataModal()">
+            <i class="fas fa-times"></i>
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Novo Administrador (ADM_MASTER Only) -->
+  <div id="admin-modal" class="modal master-only" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>
+          <i class="fas fa-user-shield"></i>
+          Cadastrar Novo Administrador
+        </h3>
+        <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+      </div>
+      <form id="admin-form" class="modal-form">
+        <div class="form-group">
+          <label for="admin-nome" class="required">
+            <i class="fas fa-user"></i>
+            Nome Completo
+          </label>
+          <input
+            type="text" 
+            id="admin-nome"
+            name="nome"
+            placeholder="Nome completo do administrador"
+            pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" 
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="admin-login" class="required">
+              <i class="fas fa-user-circle"></i>
+              Login
+            </label>
+            <input type="text" id="admin-login" name="login" placeholder="Login de acesso" required>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-data-nascimento" class="required">
+              <i class="fas fa-birthday-cake"></i>
+              Data de Nascimento
+            </label>
+            <input type="date" id="admin-data-nascimento" name="dataNascimento" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="admin-email" class="required">
+              <i class="fas fa-envelope"></i>
+              Email
+            </label>
+            <input 
+              type="email" 
+              id="admin-email"
+              name="email"
+              placeholder="email@exemplo.com"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="admin-telefone" class="required">
+              <i class="fas fa-phone"></i>
+              Telefone
+            </label>
+            <input 
+              type="tel" 
+              id="admin-telefone"
+              name="telefone"
+              placeholder="(11) 99999-9999"
+              pattern="\([0-9]{2}\)\s[0-9]{4,5}-[0-9]{4}" 
+              maxlength="15"
+              required
+              oninput="formatPhone(this)"
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="admin-cpf" class="required">
+              <i class="fas fa-id-card"></i>
+              CPF
+            </label>
+            <input 
+              type="text" 
+              id="admin-cpf"
+              name="cpf"
+              placeholder="000.000.000-00"
+              maxlength="14"
+              required
+              onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+              oninput="formatCPF(this)"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="admin-sobreNome" class="optional">
+              <i class="fas fa-user"></i>
+              Sobrenome
+            </label>
+            <input type="text" id="admin-sobreNome" name="sobreNome" placeholder="Sobrenome do administrador">
+          </div>
+
+          <div class="form-group">
+            <label for="admin-areaAtuacao" class="optional">
+              <i class="fas fa-briefcase"></i>
+              Área de Atuação
+            </label>
+            <input type="text" id="admin-areaAtuacao" name="areaAtuacao" placeholder="Ex: Gestão, Educação">
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <label for="admin-senha" class="required">
+            <i class="fas fa-lock"></i>
+            Senha
+          </label>
+          <input 
+            type="password" 
+            id="admin-senha"
+            name="senha"
+            placeholder="Senha de acesso ao sistema"
+            minlength="6"
+            required
+          >
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancelar" onclick="closeAdminModal()">
+            <i class="fas fa-times"></i>
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Salvar Administrador
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Visualizar/Editar Administrador (ADM_MASTER Only) -->
+  <div id="view-admin-modal" class="modal master-only" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>
+          <i class="fas fa-user-shield"></i>
+          Informações do Administrador
+        </h3>
+        <button class="close-btn" onclick="closeViewAdminModal()">&times;</button>
+      </div>
+      
+      <form id="edit-admin-form" class="modal-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-admin-nome">
+              <i class="fas fa-user"></i>
+              Nome Completo *
+            </label>
+            <input type="text" id="edit-admin-nome" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-admin-email">
+              <i class="fas fa-envelope"></i>
+              E-mail *
+            </label>
+            <input type="email" id="edit-admin-email" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-admin-telefone">
+              <i class="fas fa-phone"></i>
+              Telefone *
+            </label>
+            <input 
+              type="tel" 
+              id="edit-admin-telefone"
+              placeholder="(00) 00000-0000"
+              maxlength="15"
+              required
+              oninput="formatPhone(this)"
+            >
+          </div>
+          <div class="form-group">
+            <label for="edit-admin-cpf">
+              <i class="fas fa-id-card"></i>
+              CPF *
+            </label>
+            <input 
+              type="text" 
+              id="edit-admin-cpf"
+              placeholder="000.000.000-00"
+              maxlength="14"
+              required
+              onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+              oninput="formatCPF(this)"
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-admin-role">
+            <i class="fas fa-user-tag"></i>
+            Tipo de Administrador *
+          </label>
+          <select id="edit-admin-role" required>
+            <option value="">Selecione o tipo</option>
+            <option value="ADMIN">Administrador</option>
+            <option value="ADM_MASTER">Administrador Master</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <!-- Deletar Admin: Apenas ADM_MASTER -->
+          <button 
+            type="button" 
+            class="btn-danger master-only" 
+            onclick="deletarRegistro('admins', document.getElementById('edit-admin-form').dataset.adminId)"
+          >
+            <i class="fas fa-trash"></i>
+            Excluir Administrador
+          </button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+<!--<script src="production-migration.js"></script>
+<script>
+    // Substituir automaticamente
+    if (typeof EnhancedAuthService !== 'undefined') {
+        window.AuthService = EnhancedAuthService;
+        window.ApiService = EnhancedApiService;
+    }
+</script> -->
+
+  <!-- Script para processar login pendente de página externa -->
+  <script>
+    // Verificar se há login pendente vindo de página externa
+    const pendingLogin = localStorage.getItem('pendingLogin');
+    if (pendingLogin) {
+        try {
+            const loginData = JSON.parse(pendingLogin);
+            localStorage.removeItem('pendingLogin');
+            
+            console.log('🔐 Processando login pendente...');
+            
+            // Aguardar carregamento do sistema
+            document.addEventListener('DOMContentLoaded', () => {
+                // Aguardar um pouco para garantir que tudo carregou
+                setTimeout(() => {
+                    if (window.loginUser) {
+                        const success = window.loginUser(loginData.user, loginData.token);
+                        if (success) {
+                            console.log('✅ Login externo processado com sucesso');
+                        } else {
+                            console.error('❌ Falha ao processar login externo');
+                        }
+                    } else {
+                        console.error('❌ Sistema ainda não carregado');
+                    }
+                }, 200);
+            });
+        } catch (error) {
+            console.error('❌ Erro ao processar login pendente:', error);
+            localStorage.removeItem('pendingLogin');
+        }
+    }
+  </script>
+
+  <!-- Notificação global (igual ao cadastro.html) -->
+  <div id="notificacao" class="notificacao" style="
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #4CAF50;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateX(300px);
+    transition: all 0.3s ease;
+    z-index: 10000;
+    max-width: 350px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+  "></div>
+
+  <script src="painel.js"></script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+/* ===== reset e base ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, #eef2ff 0%, #e8ebff 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px;
+}
+
+/* ===== container principal ===== */
+form {
+  background: #ffffff;
+  padding: 50px 60px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(90, 47, 200, 0.15);
+  max-width: 520px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.5s ease-in-out;
+  border: 1px solid rgba(90, 47, 200, 0.05);
+}
+
+/* ===== cabeçalho ===== */
+h1 {
+  font-size: 28px;
+  color: #4b26b3;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+h3 {
+  font-size: 18px;
+  color: #3b82f6;
+  margin: 25px 0 12px;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+  padding-bottom: 6px;
+}
+
+/* ===== campos ===== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+  font-size: 14px;
+}
+
+.opcional {
+  color: #777;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+input,
+select {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  font-size: 15px;
+  width: 100%;
+  transition: all 0.25s ease;
+  background-color: #fafaff;
+}
+
+input:focus,
+select:focus {
+  border-color: #5a2fc8;
+  box-shadow: 0 0 8px rgba(90, 47, 200, 0.25);
+  outline: none;
+  background-color: #ffffff;
+}
+
+/* ===== campo sobrenome ===== */
+.nome-sobrenome {
+  display: flex;
+  gap: 10px;
+}
+
+.nome-sobrenome .form-group {
+  flex: 1;
+}
+
+/* ===== compos da data ===== */
+.dob-container {
+  display: flex;
+  gap: 10px;
+}
+
+/* ===== atividades ===== */
+#listaAtividades {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
+}
+
+/* cartão de atividade com checkbox à frente */
+.atividade-item {
+  display: flex;
+  align-items: center; /* alinhamento vertical central */
+  padding: 14px 16px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  gap: 10px; /* espaço entre checkbox e conteúdo */
+}
+
+.atividade-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.atividade-item input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}
+
+.atividade-item .atividade-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.atividade-item strong {
+  font-size: 1rem;
+  color: #3b82f6;
+}
+
+.atividade-item span {
+  font-size: 0.85rem;
+  color: #5264ff;
+}
+
+/* fallback / loading */
+#listaAtividades p {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* responsividade */
+@media (max-width: 768px) {
+  #listaAtividades {
+    grid-template-columns: 1fr;
+  }
+
+  .atividade-item {
+    flex-direction: row;
+  }
+}
+
+
+/* ===== botão confirm atividades ===== */
+#confirmActivities {
+  margin-top: 15px;
+  background: linear-gradient(90deg, #3b82f6, #5a2fc8);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#confirmActivities:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+#confirmActivities:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* ===== termos ===== */
+.termos-text {
+  background: #f5f5ff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* ===== toogle switch ===== */
+.toggle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.termos-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.termos-inline input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.termos-inline .slider {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+  background-color: #ccc;
+  border-radius: 28px;
+  transition: 0.4s;
+  flex-shrink: 0;
+}
+
+.termos-inline .slider::before {
+  content: "";
+  position: absolute;
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+.termos-inline input:checked + .slider {
+  background: linear-gradient(90deg, #3b82f6, #5a2fc8);
+}
+
+.termos-inline input:checked + .slider::before {
+  transform: translateX(24px);
+}
+
+/* ===== botão principal ===== */
+button[type="submit"] {
+  margin-top: 35px;
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, #3b82f6, #5a2fc8);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  opacity: 0.9;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(90, 47, 200, 0.25);
+}
+
+/* ===== notificações ===== */
+.notificacao {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #4CAF50, #3da06b);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(-20px);
+  z-index: 9999;
+}
+
+.notificacao.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ===== animações ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== responsividade ===== */
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+
+  form {
+    padding: 25px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .atividade-option {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .atividade-option input[type="checkbox"] {
+    align-self: flex-end;
+  }
+
+  .notificacao {
+    top: 15px;
+    right: 15px;
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+}
+
+/* ===== termos minimizados / toggle ===== */
+#toggleTermos {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #3b82f6;
+  background: #eef2ff;
+  border: 1.5px solid #3b82f6;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+#toggleTermos:hover {
+  background: #dbe7ff;
+}
+
+/* termos-text expandido */
+#termosTexto {
+  transition: all 0.4s ease;
+}
+
+/* ===== termos quando desabilitado ===== */
+.termos-inline input:disabled + .slider {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.termos-inline input:disabled + .slider::before {
+  background-color: #eee;
+}
+
+/* ===== responsividade toggle ===== */
+@media (max-width: 768px) {
+  #toggleTermos {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  #termosTexto {
+    max-height: 300px;
+  }
+}
