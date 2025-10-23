@@ -1,21 +1,15 @@
-// Efeito na navbar ao scroll - VERSÃO CORRIGIDA
+// Efeito na navbar ao scroll
 document.addEventListener('DOMContentLoaded', function() {
     const navbar = document.querySelector('.navbar');
-    let scrollTimeout;
     
     function handleScroll() {
-        clearTimeout(scrollTimeout);
-        
-        scrollTimeout = setTimeout(function() {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        }, 10);
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
     }
     
-    // Remove o outro script conflitante e usa apenas este
     handleScroll();
     window.addEventListener('scroll', handleScroll);
 });
@@ -28,6 +22,8 @@ document.querySelector('.logo img').addEventListener('click', function(e) {
         behavior: 'smooth'
     });
 });
+
+// Função para copiar PIX
 function copiarChavePixSimples() {
     const chave = "centrosaberviver@hotmail.com";
     navigator.clipboard.writeText(chave).then(() => {
@@ -41,3 +37,24 @@ function copiarChavePixSimples() {
         }, 2000);
     });
 }
+
+// Menu Mobile Simples
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (menuToggle && navMenu) {
+        menuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+        
+        // Fechar menu ao clicar nos links
+        document.querySelectorAll('.nav-link, .nav-btn').forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+                menuToggle.classList.remove('active');
+            });
+        });
+    }
+});
