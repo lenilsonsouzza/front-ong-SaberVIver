@@ -5,7 +5,7 @@
   "description": "Site oficial da ONG Saber Viver - Transformando vidas e construindo futuros.",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve -s .",
+    "start": "npx serve  .",
     "dev": "npx serve ."
   },
   "keywords": [
