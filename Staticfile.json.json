@@ -1,12 +1,8 @@
 {
   "public": ".",
-  "cleanUrls": false,
+  "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/index.html", "destination": "/index.html" },
-    { "source": "/login.html", "destination": "/login.html" },
-    { "source": "/cadastro.html", "destination": "/cadastro.html" },
-    { "source": "/painel.html", "destination": "/painel.html" }
+    { "source": "/**", "destination": "/index.html" }
   ]
 }
