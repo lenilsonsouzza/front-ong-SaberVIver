@@ -1,3 +1,10 @@
 {
-  "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  "public": ".",
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/index.html", "destination": "/index.html" },
+    { "source": "/login.html", "destination": "/login.html" },
+    { "source": "/cadastro.html", "destination": "/cadastro.html" },
+    { "source": "/painel.html", "destination": "/painel.html" }
+  ]
 }
