@@ -3,6 +3,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/login.html", "destination": "/login.html" },
+    { "source": "/cadastro.html", "destination": "/cadastro.html" },
     { "source": "/**", "destination": "/index.html" }
   ]
 }
