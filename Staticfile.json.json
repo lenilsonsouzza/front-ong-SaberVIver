@@ -1,11 +1,4 @@
 {
-  "public": ".",
   "cleanUrls": false,
-  "trailingSlash": false,
-  "headers": {
-    "/**": {
-      "Cache-Control": "public, max-age=0, must-revalidate"
-    }
-  },
-  "errorPage": "/index.html"
+  "trailingSlash": false
 }
