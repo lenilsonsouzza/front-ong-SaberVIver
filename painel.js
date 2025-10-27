@@ -55,7 +55,7 @@ const IS_PRODUCTION = detectEnvironment();
 
 const CONFIG = {
     API_BASE_URL: IS_PRODUCTION && typeof PRODUCTION_CONFIG !== 'undefined' 
-        ? PRODUCTION_CONFIG.API_BASE_URL || "https://saberviver-api.up.railway.app"
+        ? PRODUCTION_CONFIG.API_BASE_URL || "https://ongsaberviver.onrender.com"
         : "http://localhost:8080" ,
     
     // SISTEMA USA APENAS API REAL - SEM MOCK
@@ -1452,7 +1452,7 @@ class ModalService {
         
         try {
             // Tentar carregar atividades da API
-            const response = await fetch('https://saberviver-api.up.railway.app/atividades/publico', {
+            const response = await fetch('https://ongsaberviver.onrender.com/atividades/publico', {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -2614,7 +2614,7 @@ class EventHandlers {
 
             if (token) {
                 try {
-                    const response = await fetch("https://saberviver-api.up.railway.app/alunos", {
+                    const response = await fetch("https://ongsaberviver.onrender.com/alunos", {
                         method: "POST",
                         headers: {
                             "Accept": "application/json",
@@ -3413,7 +3413,7 @@ class App {
                     email: 'admin@saberviver.org',
                     telefone: '(11) 99999-0001',
                     cpf: '111.222.333-44',
-                    role: 'ADMIN',
+                    role: 'ADM',
                     status: 'ativo'
                 },
                 {
@@ -3612,7 +3612,7 @@ class App {
 }
 
 class ApiService {
-    static baseUrl = "https://saberviver-api.up.railway.app"; // sem barra no final
+    static baseUrl = "https://ongsaberviver.onrender.com"; // sem barra no final
 
     static async request(endpoint, options = {}) {
         const url = `${this.baseUrl}${endpoint}`;
@@ -5232,7 +5232,7 @@ window.forcarDadosInterface = function() {
             { id: 1, nome: 'Prof. Carlos', email: 'carlos@escola.com', telefone: '(11) 88888-1111', atividade: 'Futebol', status: 'ativo', role: 'VOLUNTARIO' }
         ],
         admins: [
-            { id: 1, nome: 'Admin Sistema', email: 'admin@sistema.com', telefone: '(11) 66666-1111', role: 'ADMIN', status: 'ativo' }
+            { id: 1, nome: 'Admin Sistema', email: 'admin@sistema.com', telefone: '(11) 66666-1111', role: 'ADM', status: 'ativo' }
         ]
     };
     

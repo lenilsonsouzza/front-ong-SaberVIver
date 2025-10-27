@@ -418,7 +418,7 @@ const alunoData = {
       body: JSON.stringify(alunoData)
     };
 
-    const resposta = await fetch("https://saberviver-api.up.railway.app/alunos/publico", requestOptions);
+    const resposta = await fetch("https://ongsaberviver.onrender.com/publico", requestOptions);
 
     if (resposta.ok) {
       mostrarNotificacao("Cadastro concluído com sucesso!", "#4CAF50");
